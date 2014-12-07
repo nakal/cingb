@@ -1,0 +1,77 @@
+
+# --------------------------------------------------------------
+#
+# Makefile.dos
+#
+# This file is the Makefile for DOS support.
+#
+# --------------------------------------------------------------
+
+# system specific definitions
+
+CC                      = gcc
+SYSDEFS 		= -DDOS -DUSE_LITTLE_ENDIAN
+
+
+RELOBJS=z80.o gameboy.o sgb.o debug.o dos.o sound.o arplay.o main.o
+DEBOBJS=z80.do gameboy.do sgb.do debug.do dos.do arplay.do main.do
+
+OTHERFILES=Makefile conftest confjoystick cingb cingb_deb cingb_glide joyconf.h cingb.log *~ *.exe
+GLIDEOBJS=z80.go gameboy.go sgb.go debug.go dos.go sound.go arplay.go main.go 
+
+# Warnings
+
+WARN = -Wall -Wstrict-prototypes
+
+
+# Optimization
+
+OPTMZ = -O6 -fomit-frame-pointer
+#OPTMZ = -g
+
+
+SWITCHES=$(SYSDEFS) $(INCPATH) $(WARN) $(OPTMZ)
+.SUFFIXES: .c .o .do .go
+
+# Definitions: (#ifdef's)
+#
+# DEBUG       - includes debugger and special messages
+# VERBOSE     - some additional messages
+# JOYSTICK    - enables the joystick/-pad support
+# FRAMEBUFFER - enables the framebuffer device support
+
+#DEVS            =
+#GLOBALDEF 	= -DVERBOSE $(DEVS)
+DEBUGF 		= -DDEBUG -DHARDDEBUG $(GLOBALDEF)
+#RELF   		= $(GLOBALDEF)
+
+
+standard: $(RELOBJS)
+	  $(CC) -o cingb $(LIBPATH) $(OPTMZ) $(RELOBJS) $(LIBS)
+
+debug: $(DEBOBJS)
+	$(CC) -o cingb_deb $(LIBPATH) $(DEBOBJS) $(LIBS) 
+
+clean:
+	rm -f $(RELOBJS) 
+	rm -f $(DEBOBJS) 
+	rm -f $(OTHERFILES)
+	cp joyconf.h.templ joyconf.h
+
+.c.o:
+	$(CC) -c $(SWITCHES) $(RELF) -o $@ $<
+
+.c.do:
+	$(CC) -c $(SWITCHES) $(DEBUGF) -o $@ $<
+
+z80.c:      globals.h z80.h z80opc.h gameboy.h sys.h debug.h
+
+gameboy.c:  globals.h z80.h z80opc.h gameboy.h sys.h sound.h
+
+debug.c:    globals.h z80.h debug.h gameboy.h
+
+dos.c:     globals.h z80.h gameboy.h sys.h sound.h joypad.h
+
+arplay.c: globals.h arplay.h
+
+main.c:     globals.h z80.h gameboy.h

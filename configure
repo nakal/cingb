@@ -1,0 +1,184 @@
+#!/bin/sh
+
+#
+# configure
+#
+# This script should be started before 'make'.
+# It should detect your personal configuration.
+#
+
+OS=`uname`
+case $OS in
+	Linux) OSDEF=_LINUX ;;
+	*BSD) OSDEF=_BSD ;;
+	SunOS) OSDEF=_SUNOS ;;
+	*) OSDEF=_UNKNOWN ;;
+esac
+echo "System define: $OSDEF"
+
+echo -n "Looking for Xorg headers... "
+X11PATH=""
+test -r /usr/local/include/X11/Xlib.h && X11PATH=/usr/local
+test -r /usr/X11R6/include/X11/Xlib.h && X11PATH=/usr/X11R6
+if [ -z "$X11PATH" ]; then
+	echo "not found (CONFIGURE ERROR!)."
+	exit 1
+else
+	echo "found in $X11PATH"
+fi
+
+echo "Setting up prefixes..."
+PREFIXSETUPBSD="\
+.if !defined(PREFIX)\n\
+PREFIX = \/usr\/local\n\
+.endif\n\
+\n\
+.if !defined(X11BASE)\n\
+X11BASE = $X11PATH\n\
+.endif\n\
+"
+
+PREFIXSETUPGNU="\
+ifndef PREFIX\n\
+PREFIX = /usr/local\n\
+endif\n\
+\n\
+ifndef X11BASE\n\
+X11BASE = X11PATH\n\
+endif\n\
+"
+
+rm -f ./conftest ./Makefile ./GNUmakefile
+printf "Testing compiler ... ";
+cc -Wall -Wstrict-prototypes -o conftest conftest.c
+if [ $? -ne 0 ]; then
+	echo "Compilation failed."
+	exit 1
+fi
+./conftest
+
+case $? in
+0)   printf "cc: test FAILED.\n";exit 1;;
+1)   ENDIANSTR="";;
+2)   ENDIANSTR="-DUSE_LITTLE_ENDIAN";;
+esac
+
+OS=`uname`
+case $OS in
+*BSD)  printf "Using -pthread.\n"; PTHREAD="-pthread";;
+    *) printf "Using -lpthread.\n"; PTHREAD="-lpthread";;
+esac
+
+printf "Searching special header files ...\n"
+printf "fb.h: "
+if test -r /usr/include/linux/fb.h ; then
+    printf "found.\n";
+    if test ! -e "/dev/fb0" ; then
+    printf "Warning: /dev/fb0 doesn't exist.\n";
+    fi
+    FBSTR="-DFRAMEBUFFER"
+else
+    printf "not found.\n";
+    unset FBSTR;
+fi
+
+printf "joystick.h: "
+if test -r /usr/include/linux/joystick.h || test -r /usr/include/sys/joystick.h ; then
+    printf "found.\n";
+    if test ! -e "/dev/js0" ; then
+	if test ! -e "/dev/joy0"; then
+	    printf "Warning: /dev/js0 and /dev/joy0 don't exist.\n";
+	    printf "         Setting device to /dev/js0.\n";
+	fi
+	case $OS in
+	    *BSD)  printf "Using BSD joystick.\n"; JOYSTR="-DBSD_JOYSTICK";;
+	    *) printf "Using Linux joystick.\n"; JOYSTR="-DJOYSTICK";;
+	esac
+    else
+	JOYSTR="-DJOYSTICK"
+    fi
+    printf "Compiling joy-button configuration ... "
+    JOYCONF="conf"
+    JOYINST="install -m 755 -s .\/cingb_conf \/usr\/local\/bin\/cingb_conf"
+    printf "ok\n";
+else
+    printf "not found.\n";
+    unset JOYSTR;
+fi
+
+printf "soundcard.h: "
+if test -r /usr/include/linux/soundcard.h || test -r /usr/include/sys/soundcard.h ; then
+    printf "found.\n";
+    SNDSTR="-DSOUND";
+else
+    printf "not found.\n";
+    printf "audioio.h: "
+    if test -r /usr/include/sys/audioio.h ; then
+	printf "found.\n";
+	SNDSTR="-DSOUND -DAUDIO";
+    else
+	printf "not found.\n";
+	unset SNDSTR;
+    fi
+fi
+
+
+printf "Xvlib.h: "
+if test -r $X11PATH/include/X11/extensions/Xvlib.h ; then
+    printf "found.\n";
+    XVIDEODEF="-DWITH_XVIDEO";
+    LIBXV="-lXv"
+else
+    printf "not found.\n";
+    unset XVIDEODEF
+    unset LIBXV
+fi
+
+printf "XShm.h: "
+if test -r $X11PATH/include/X11/extensions/XShm.h ; then
+    printf "found.\n";
+    SHMSTR="-DMIT_SHM";
+    LIBSHM="-lXext";
+else
+    printf "not found.\n";
+    unset SHMSTR;
+    unset LIBSHM;
+fi
+
+printf "Checking libraries  ...\n"
+printf "libsocket ... "
+if test -r /lib/libsocket.a || test -r /usr/lib/libsocket.a ; then
+    printf "found.\n";
+    LIBSOCK="-lsocket";
+else
+    printf "not found.\n"
+    unset LIBSOCK;
+fi
+
+printf "libnsl ... "
+if test -r /lib/libnsl.a || test -r /usr/lib/libnsl.a ; then
+    printf "found.\n";
+    LIBNSL="-lnsl";
+else
+    printf "not found.\n";
+    unset LIBNSL;
+fi
+
+
+printf "Creating Makefile ... "
+sed "s/%%%endian%%%/$ENDIANSTR/;s/%%%joystick%%%/$JOYSTR/;s/%%%framebuffer%%%/$FBSTR/;s/%%%sound%%%/$SNDSTR/;s/%%%libnsl%%%/$LIBNSL/;s/%%%libsocket%%%/$LIBSOCK/;s/%%%mitshm%%%/$SHMSTR/;s/%%%libext%%%/$LIBSHM/;s/%%%pthread%%%/$PTHREAD/;s/%%%joyconf%%%/$JOYCONF/;s/%%%joyinst%%%/$JOYINST/; s/%%%XVDEF%%%/$XVIDEODEF/; s/%%%LIBXV%%%/$LIBXV/; s/%%%OSDEF%%%/-D$OSDEF/" Makefile.templ > Makefile.pre
+
+awk "/%%%prefix-setup%%%/ { print \"$PREFIXSETUPBSD\";next};{ print \$0 }" Makefile.pre > Makefile
+awk "/%%%prefix-setup%%%/ { print \"$PREFIXSETUPGNU\";next};{ print \$0 }" Makefile.pre > GNUmakefile
+
+if test "$?"="0"; then
+	printf "ok\n";
+else
+        printf "FAILED\n";
+	exit 1;
+fi
+
+if test -n "$JOYPATH" ; then
+    printf "\n................................................\n";
+    printf "Now run 'make'.\n";
+fi

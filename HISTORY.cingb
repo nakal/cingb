@@ -1,0 +1,67 @@
+
+Here, I want to give you some details about the history of cingb.
+
+----------------------------------------------------------------------
+
+1) cingb is older than you think!
+
+I got interested in hardware emulation (it was years ago),
+because running a virtual machine is like creating
+an own computer.
+So the project developed so far only for educational purposes.
+I simply wanted to learn to emulate CPU and some peripherials.
+
+The development began on DOS with Pascal (mid-90s I think). 
+It had lots of assembly code and was full of bugs.
+After I got Linux I was amazed how easy the development
+with gcc there was and began to port it.
+Well, "port" is the wrong term, I completely rewrote it.
+
+Please keep in mind:
+With this project I learned how to program in C.
+If I would start today, many things would look different,
+of course.
+So please don't laugh about some weird constructs.
+The most important thing is the functionality.
+
+While writing the code I learned how to use gnu-make, too.
+So I reorganized the code a few times and created 
+separate modules.
+
+Today, there are still some strange-looking pieces of code.
+Of course, you people should try to correct and to improve
+the code. Any help is welcome.
+
+2) Why Gameboy(tm) as virtual machine?
+
+I decided to emulate Gameboy because it is EASY to
+analyse this little machine. Further, I had a gameboy
+and many games for it, so I've had an idea how it
+should look/sound like.
+But be sure, I've thought about many possibilities,
+like e.g. C 64. The CPU is easy to emulate, too, but
+the peripherials are more complicated.
+
+You really cannot imagine, how happy I was seeing
+the CPU running and working properly in debug-mode
+the first time (with Tetris(tm))!
+I had no display, but the CPU was moving!
+It was great.
+
+3) SOME RULES ABOUT INTERACTING WITH ME
+
+1st: NEVER NEVER NEVER! NEVER EVER ask me for ROMs
+     for cingb !!!
+     THIS IS MEANT SERIOUS.
+
+2nd: If you write something, write something useful.
+     I don't want to know about new games which
+     aren't working, because I DON'T HAVE the right
+     to download them and to use them with cingb.
+     Perhaps, in future, someone can solve problems 
+     in this way.
+
+----------------------------------------------------------------------
+
+Have fun with cingb
+nakal

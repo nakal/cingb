@@ -1,0 +1,56 @@
+
+----------------------------------------
+cingb --- FAQ
+----------------------------------------
+
+I will include some hints here.
+Ask and you'll get an answer.
+
+
+----------------------------------------
+Q0. Where do I get gameboy (gameboy 
+    color) roms ?
+
+A0. You can buy them in a supermarket
+    (aka cartridges) .
+    It is NOT allowed to play roms
+    in form of files, if you don't own
+    the original cartridges.
+
+----------------------------------------
+Q1. I try to launch cingb on the 
+    framebuffer device, but it seems,
+    that it doesn't work. I get this
+    message:
+    Error: FBIOGET_FSCREENINFO
+
+A1. Perhaps the rights for the frame-
+    buffer device are not set right.
+    Try this:
+
+    crw-rw-r-- # root video 29,0 ###### fb0
+
+    Don't forget to join the group "video".
+    Check your group-id by typing "id" on 
+    the command-line.
+
+----------------------------------------
+Q2. The sound often skips. 
+    What should I do ?
+
+A2. The sound generation hasn't been 
+    optimized, yet.
+    But it should work at workstations,
+    which are better than a Pentium 
+    MMX 233.
+    Don't complain about headache please.
+    
+----------------------------------------
+Q3. I cannot run CINGB.EXE for MS-DOS !
+
+A3. CINGB uses lots of memory which
+    cannot be provided in DOS real-mode.
+    That's why you will need some files 
+    from the DJGPP website. 
+    Please follow the instructions there 
+    and install the DPMI32 support.

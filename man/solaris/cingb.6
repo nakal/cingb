@@ -1,0 +1,52 @@
+.TH CINGB 6
+.SH NAME
+cingb \- A Gameboy(tm) emulator.
+.SH SYNOPSIS
+.B cingb
+[ -d ] [ -n ] [ -o ] [ -h ] [-f sound-frequency ]
+[ -c server ] [ -a action-replay-code ] ROM-Image
+.SH DESCRIPTION
+.B cingb
+is a free Gameboy(tm) emulator for several operating systems.
+.SS OPTIONS
+The following command line arguments are supported:
+.IP ROM-image
+A file containing a Gameboy(tm) game.
+.IP \-d
+Double-size display mode.
+.IP \-n
+Switch off the sound.
+.IP \-o
+Use old black&white Gameboy mode. Some games might
+run with fewer problems, if using this switch.
+.IP \-h
+Start in server mode. You can use this, if you want to
+use the Dialog-Link emulation. Look also at \-c
+how to connect to a Gameboy emulator in server mode.
+.IP \-f sound-frequency
+Change the sound frequency to the specified value
+(8000-44100).
+.IP \-c server
+Use Dialog-Link emulation to connect to one other
+.B cingb
+on host
+.IR server
+which was run using the
+.IR h
+switch.
+.IP \-a action-replay-code
+Alter the memory with the given
+.IR action-replay-code.
+This is only experimental. I haven't really found out the
+system how these codes are mapped to the cartridge memory.
+.SH AUTHOR
+nakal
+.SH BUGS
+You should be always careful what you are running, of course.
+.B cingb
+has
+.IR not
+been built to be secure.
+You can always complain about incompatibilities
+on my project site
+.IR http://www.sourceforge.net/projects/cingb.

@@ -1,0 +1,114 @@
+
+# --------------------------------------------------------------
+#
+# Makefile[.templ]
+#
+# This file is the Makefile [template].
+# The real Makefile will be produced from Makefile.templ.
+# To aquire it, run ./configure
+#
+# --------------------------------------------------------------
+
+# system specific definitions
+
+SYSDEFS 		= -DUNIX %%%endian%%%
+
+# additional CFLAGS
+CFLAGS=-Wall -Wstrict-prototypes -pedantic -ansi
+
+# System prefixes (conditional)
+%%%prefix-setup%%%
+
+# unix dependent
+
+INCPATH              = -I/usr/include -I/usr/include/glide -I$(X11BASE)/include -I/usr/include/X11
+LIBPATH 	     = -L$(X11BASE)/lib
+
+LIBS 		     = 	%%%pthread%%% -lX11 %%%libext%%% %%%libsocket%%% \
+			%%%libnsl%%% %%%LIBXV%%%
+
+GLIDELIB             = -lglide2x -lm
+
+RELOBJS=z80.o gameboy.o sgb.o debug.o unix.o sound.o arplay.o \
+        settings.o main.o 
+DEBOBJS=z80.do gameboy.do sgb.do debug.do unix.do arplay.do \
+        settings.do main.do 
+
+OTHERFILES=Makefile GNUmakefile Makefile.pre conftest \
+	cingb cingb_deb cingb_glide \
+	cingb.log cingb_conf *~
+GLIDEOBJS=z80.go gameboy.go sgb.go debug.go unix.go sound.go arplay.go \
+          settings.go main.go 
+
+CONFOBJS=settings.o confjoystick.o
+
+# Warnings
+
+WARN = -Wall -Wstrict-prototypes
+
+
+# Optimization
+
+OPTMZ = -O2
+#OPTMZ = -O6 -fomit-frame-pointer
+#OPTMZ = -g
+
+
+SWITCHES=$(CFLAGS) $(SYSDEFS) $(INCPATH) $(WARN) $(OPTMZ)
+.SUFFIXES: .c .o .do .go
+
+# Definitions: (#ifdef's)
+#
+# DEBUG       - includes debugger and special messages
+# VERBOSE     - some additional messages
+# JOYSTICK    - enables the joystick/-pad support
+# FRAMEBUFFER - enables the framebuffer device support
+
+DEVS            = %%%joystick%%% %%%framebuffer%%% -DDIALOGLINK
+GLOBALDEF 	= -DVERBOSE $(DEVS) %%%mitshm%%% %%%XVDEF%%% %%%OSDEF%%%
+DEBUGF 		= -DDEBUG $(GLOBALDEF)
+RELF   		= $(GLOBALDEF) %%%sound%%%
+GLIDEF          = -DGLIDE %%%joystick%%% %%%sound%%%
+
+
+standard: $(RELOBJS) %%%joyconf%%%
+	  $(CC) -o cingb $(LIBPATH) $(OPTMZ) $(RELOBJS) $(LIBS)
+
+debug: $(DEBOBJS) %%%joyconf%%%
+	$(CC) -o cingb_deb $(LIBPATH) $(DEBOBJS) $(LIBS) 
+
+glide:  $(GLIDEOBJS) %%%joyconf%%%
+	$(CC) -o cingb_glide $(LIBPATH) $(OPTMZ) $(GLIDEOBJS) $(LIBS) $(GLIDELIB)
+
+conf:   $(CONFOBJS)
+	$(CC) -o cingb_conf $(CONFOBJS)
+
+install:
+	install -m 755 -s ./cingb $(PREFIX)/bin/cingb
+	%%%joyinst%%%
+
+clean:
+	rm -f $(RELOBJS) $(DEBOBJS) $(GLIDEOBJS) $(OTHERFILES) $(CONFOBJS)
+
+.c.o:
+	$(CC) -c $(SWITCHES) $(RELF) -o $@ $<
+
+.c.do:
+	$(CC) -c $(SWITCHES) $(DEBUGF) -o $@ $<
+
+.c.go:
+	$(CC) -c $(SWITCHES) $(GLIDEF) -o $@ $<
+
+z80.c:      globals.h z80.h z80opc.h gameboy.h sys.h debug.h
+
+gameboy.c:  globals.h z80.h z80opc.h gameboy.h sys.h sound.h
+
+debug.c:    globals.h z80.h debug.h gameboy.h
+
+unix.c:     globals.h z80.h gameboy.h sys.h sound.h joypad.h
+
+arplay.c: globals.h arplay.h
+
+settings.c: globals.h settings.h
+
+main.c:     globals.h z80.h gameboy.h

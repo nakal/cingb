@@ -1,0 +1,68 @@
+.\"
+.\" cingb - Gameboy emulator manual page
+.\"
+.Dd October 25, 2002
+.Dt CINGB 6
+.Os
+.Sh NAME
+.Nm cingb
+.Nd A Gameboy(tm) emulator.
+.Sh SYNOPSIS
+.Nm
+.Op Fl dnoh
+.Op Fl f Ar sound-frequency
+.Op Fl c Ar server
+.Op Fl a Ar action-replay-code
+.Ar ROM-image
+.Sh DESCRIPTION
+.Nm
+is a free Gameboy(tm) emulator for several operating systems.
+.Sh OPTIONS
+The following command line arguments are supported:
+.Bl -tag -width indent
+.It Ar ROM-image
+A file containing a Gameboy(tm) game.
+.It Fl d
+Double-size display mode.
+.It Fl n
+Switch off the sound.
+.It Fl o
+Use old black&white Gameboy mode. Some games might
+run with fewer problems, if using this switch.
+.It Fl h
+Start in server mode. You can use this, if you want to
+use the Dialog-Link emulation. Look also at
+.Fl c
+how to connect to a Gameboy emulator in server mode.
+.It Fl f Ar sound-frequency
+Change the sound frequency to the specified value
+(8000-44100).
+.It Fl c Ar server
+Use Dialog-Link emulation to connect to one other
+.Nm
+on host
+.Ar server
+which was run using the
+.Fl h
+switch.
+.It Fl a Ar action-replay-code
+Alter the memory with the given
+.Ar action-replay-code.
+This is only experimental. I haven't really found out the
+system how these codes are mapped to the cartridge memory.
+.Sh AUTHOR
+.An nakal
+.Sh BUGS
+You should be always careful what you are running, of course.
+.Nm
+has
+.Bf -emphasis
+not
+.Ef
+been built to be secure.
+You can always complain about incompatibilities
+on my project site
+.Bf -emphasis
+http://www.sourceforge.net/projects/cingb.
+.Ef
+

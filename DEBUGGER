@@ -1,0 +1,130 @@
+*************************************
+A short manual for the debugger mode.
+*************************************
+
+The debugger isn't that smart. 
+So don't get mad, because I have no 
+time for making everything fancier.
+
+1. How to enable debugger mode ?
+-------------------------------------
+You must compile the sources using
+'make debug' or 'make debug2'.
+You should use 'make debug', because
+it's a bit faster.
+The target created then, is called
+'cingb_deb'.
+The only way to run the debugger is
+under X. There's no support for
+framebuffer-devices, guess why ...
+When you run the debugger the emulator
+stops at PC: 0x0100.
+
+2. How do I use commands ?
+-------------------------------------
+The most simple command is the 'next
+step'-command. Just press RETURN.
+Just enter the command with 
+the needed parameters.
+And then you'll be eventually asked 
+about further parameters.
+
+3. Which command-keys are defined ?
+-------------------------------------
+They are defined in z80.c, procedure
+StartCPU. Why ? I don't know...
+Somehow it landed there.
+<addr> is hexadecimal value.
+So here's the list of command-keys
+(and don't forget to press RETURN, 
+ see 2.):
+
+b <addr>   - set a breakpoint, at address <addr>
+             Execution will continue until PC
+    	     hits address !
+c          - clears the breakpoint
+d <addr>   - dump memory, at address <addr>
+e <addr>   - edit ONE byte, at <addr> ,write 
+             value (you'll be asked)
+g [<addr>] - go to address <addr>;
+ 	     without <addr> it will continue
+	     according to PC
+h          - displays help
+o <nr>     - skip over commands, 
+	     count (decimal number)
+             this is used, to avoid pressing return
+             for hours, when you approximately know
+             how many commands should be processed,
+             but don't know an address to put a 
+             breakpoint at.
+q          - quits the debugger and closes everything.
+v <addr>   - view a value (byte), at address ...
+             dump a single byte
+#          - graphical lcd-dump, even when lcd off.
+             It shows the VRAM to screen (currently
+             ONLY for standard gameboy)
+             note: I needs 2 values, because
+             gameboy can use fast VRAM swapping,
+             windows, etc... so you need to examine
+             4 combinations.
+             Press RETURN, and don't care if the
+             window remains on screen. It'll 
+             disappear.
+
+4. This is not much stuff to control 
+   the debugger ...
+--------------------------------------------
+You're right, but there are some hints, 
+too...
+Take a closer look at gameboy.c . 
+The procedures: GetByteAt, SetByteAt and
+gameboyspecific have some stuff commented out.
+
+5. The parameters don't work, somehow...
+--------------------------------------------
+They are in hexadecimal, without preceding 
+'0x' or '$'.
+
+6. So how do I run the emulation ?
+--------------------------------------------
+Put a breakpoint on an adress which cannot
+be executed, or probably won't be executed.
+I usually use 0x000A (b <RETURN> a <RETURN>).
+But to go for sure use VRAM or IO adresses
+for breakpoints.
+
+7. Now I typed 'g', how to stop it ?
+--------------------------------------------
+Press 'b' WHILE THE WINDOW IS IN FOREGROUND.
+
+8. Is there some other useful stuff ?
+--------------------------------------------
+Yeah, while the window is in foreground,
+you can type 't' for instruction tracing.
+It really slows down the emulation, but gives
+you all infos on the terminal.
+Then you can use the normal emulator keys,
+like 'q' for quit, etc ...
+
+9. Can you explain the status line ?
+--------------------------------------------
+AF,BC,DE,HL are the standard Z80 registers.
+The lower byte of AF are the flags.
+They are split in Z,N,H,C.
+SP is the stack-pointer, ROM/RAM is the
+currently selected ROM/RAM bank.
+CLKS shows you how many clock-ticks passed
+since the beginning. Right after that
+there is a flag which shows whether the 
+(COLOR) Gameboy is in (S)ingle or (D)ouble 
+speed mode.
+Right after that, there are some of the
+most important IO-ports dumped.
+
+10. This is not enough for me to do some
+    debugging ...
+    How do you do that ?
+-------------------------------------------
+I admit, that it really sucks, as a 
+debugger, but it's enough for me.
+You can improve it, if you want.

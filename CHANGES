@@ -1,0 +1,536 @@
+
+****************************************
+***	     Change history          ***
+****************************************
+
+------------------------------------------------------------
+Revision 0.32		2014/12/07 nakal
+
+- Changed configure script to make it more portable
+	(gcc restriction not needed)
+
+------------------------------------------------------------
+Revision 0.31		2009/06/10 nakal
+
+- X11 output restored. Not using XV resulted in core dumps
+
+------------------------------------------------------------
+Revision 0.30ALPHA   2009/06/10 nakal
+
+- XVideo support corrected (has still some problems with
+  radeonhd drivers, because XvPutImage has not been fully
+  implemented, yet)
+- Fixed FreeBSD build
+- Crashing during X initialization phase won't cause X key
+  repeat problems anymore
+- Removed some warnings
+- Fixed FreeBSD ports collection integration, I hope ;)
+
+------------------------------------------------------------
+Revision 0.29ALPHA   2005/12/20 nakal
+
+- shortened some pieces of drawing code and optimized
+  it partially
+
+------------------------------------------------------------
+Revision 0.28ALPHA   2002/10/26 nakal
+
+- tried threaded sound, realized it is a bad idea,
+  removed it again
+- sound defaults to ON (switch -s removed)
+- Solaris casting of samples fixed
+- fixed 32 bit pixel-width behavior
+  (still won't run on 24-bit systems)
+- fixed a segfault which occured in 32-bit resolution
+  with small display
+- improved channel 4 sound output (which made ugly
+  noises and affected the whole sound generation)
+- fixed gunzip support for filenames with unusual
+  characters (blanks, parenthesis, etc...)
+- changed the joypad behaviour a little bit
+- written manual pages for FreeBSD and Solaris
+- inserted a compilation optimization for machines
+  with fewer memory
+- removed obsolete documentation
+- converted some files from old DOS \r\n format
+  to Unix \n
+- implemented 2-button joypad support for FreeBSD
+  (still need a calibration routine!)
+- renamed joybtn_conf.c to confjoystick.c
+- removed joyconf.h and joyconf.h.sidewinder
+- implemented joystick setup as separate binary
+  'cingb_conf' (no more static configuration)
+
+------------------------------------------------------------
+Revision 0.27ALPHA   2001/06/21 nakal
+
+- fixed the Glide port for Linux
+
+------------------------------------------------------------
+Revision 0.26ALPHA   2001/06/12 nakal
+
+- small changes in sound again
+- renamed opcodes in debugger
+  LD (FF00+X) => LDH (X)
+  (I'm writing an assembler for
+   my gameboy emulator)
+- glide-port needs the math-library,
+  since recently, i dont know why...
+
+------------------------------------------------------------
+Revision 0.25ALPHA   2001/06/08 nakal
+
+- standard X11-include-path now in Makefile
+- compile check on OpenBSD
+- sound works with OpenBSD (audio device)
+- fixed gunzip on roms on OpenBSD
+
+------------------------------------------------------------
+Revision 0.24ALPHA   2001/06/04 nakal
+
+- small sound fix (again, grrr)
+- changed debugger-command handling
+
+------------------------------------------------------------
+Revision 0.23ALPHA   2001/06/01 nakal
+
+- opening gzipped cartridges now possible
+- fixed sound support in some places
+  (really stupid bugs! but noone really
+   could help me about it!)
+  the sound is still a bit "aggressive",
+  but there is (still) lots to do
+- made sound frequency selectable;
+  default: 22050
+
+------------------------------------------------------------
+Revision 0.22ALPHA   2001/03/29 nakal
+
+- ported to MS-DOS (DJGPP)
+  - renamed files to 8.3 MS-DOS names
+    (not needed, but ... you never know!)
+  - support for 320x200x6bit
+  - implemented standard keyboard support
+- unbelievable! no bugs in platform-independent
+  code :)
+
+------------------------------------------------------------
+Revision 0.21ALPHA   2001/02/26 nakal
+
+unix.c:
+- BUG# 223276 fixed (Sun Solaris 2.7 DefaultGC)
+
+------------------------------------------------------------
+Revision 0.20ALPHA   2000/11/24 nakal
+
+unix.c:
+- inserted #define's for MIT_SHM
+- it seems XFlush is not needed after
+  X(Shm)PutImage, I think it could
+  mean: more performance (?)
+
+configure:
+- update for non-XShm-systems
+- replaced locate-commands with test -r
+  commands for finding header/lib-files
+
+Global:
+- testing needed for Solaris still
+  in progress
+
+------------------------------------------------------------
+Revision 0.19ALPHA   2000/11/22 nakal
+
+unix.c:
+- now using XShm-routines (accelerated
+  graphics output)
+
+Makefile:
+- fixed libsocket+libnsl on some systems
+
+sgb.c, sgb.h:
+- new in this version, they give some
+  ideas how the SGB support could
+  work (packet-transfer and SGB
+  detection)
+- now only for debugging purposes      
+
+Global:
+- testing needed for Solaris
+
+------------------------------------------------------------
+Revision 0.18ALPHA   1999/10/24 nakal
+
+Done some changes to unix.c:
+- now you can quit by pressing "ESC" or "q"
+  (fb & glide mode)
+- tty switching is supported now (fb mode)
+
+Implemented action-replay support.
+- new files: actionreplay.c actionreplay.h
+
+------------------------------------------------------------
+Revision 0.17ALPHA   1999/10/24 nakal
+
+Implemented tcp/ip support for dialog
+link (-DDIALOGLINK, only EARLY-ALPHA):
+- full support for io-ports 0x01 and 
+  0x02
+
+First support for /dev/audio on Solaris.
+- 8-bit-PCM support (DOESN'T WORK FOR NOW !)
+
+Fixed games:
+- Centipede (cgb):
+  highest palette bit is in use (!) Now 
+  it will be stored.
+- Tarzan (cgb):
+  HDMA5, bit 7 will be set when general
+  purpose transfer ends
+- Klax (cgb)
+  fixed horizontal HDMA
+- Zebco Fishing (cgb)
+  fixed other HDMA problems,
+  src/dst address-update
+  HDMA should work fine now.
+
+------------------------------------------------------------
+Revision 0.16ALPHA-3 1999/10/09 nakal
+
+Improved the cgb-cartridge detection
+routine. Needed for:
+- Tetris DX
+
+Implemented new switch "-f" for 
+forcing the standard (b/w) gameboy 
+mode.
+
+Made first steps for /dev/audio on
+SVR4 systems (needs testing; no release
+so far)
+------------------------------------------------------------
+Revision 0.16ALPHA-2 1999/10/07 nakal
+
+Fixed bug in gameboy.c:
+- Pokemon works again
+
+Updated configure:
+- gives warnings about missing devices,
+  like /dev/fb0, /dev/js0
+------------------------------------------------------------
+Revision 0.16ALPHA   1999/10/02 nakal
+
+First official ALPHA release !
+The sound still slows everything down.
+
+Fixed rom bank selection code (MBC5).
+It seems that addressing memory
+(0x3000-0x3FFF) selects something else.
+Perhaps, higher rom-bank-bits ???
+Will check this, if I see a cart > 2MB.
+
+Fixed:
+- Asteroids
+- Zebco Fishing (partial)
+
+Different sound updates:
+- sound mode 4 implemented (hmm, bad!)
+- added sweep to channel 1 (good!)
+  io-port: 0x10, now full support
+- better timing
+- when 0xFF is written to sound-freq-low,
+  the sound is switched off now
+- fixed sound gain level 
+  (was 0, must be 128 when quiet !)
+
+------------------------------------------------------------
+Revision 0.15ALPHA-2 1999/10/01 nakal
+
+Updated cart-type information:
+- included type 0x10 as MBC5
+
+New game works:
+- Harvest Moon (gbc)
+
+Checked Klax ... Nocash says it uses
+HuC1, but ... it works.
+
+------------------------------------------------------------
+Revision 0.15ALPHA   1999/09/24 nakal
+
+Implemented sound support:
+- mode 1 (without envelope and sweep 
+  functions)
+  IO-ports:
+  - NR11 (full)
+  - NR13 (full)
+  - NR14 (partial)
+- mode 2 (without envelope)
+  IO-ports:
+  - NR21 (full)
+  - NR23 (full)
+  - NR24 (partial)
+- mode 3 (buggy; awful)
+  - NR30 (full)
+  - NR31 (full)
+  - NR32 (full)
+  - NR33 (full)
+  - NR34 (partial)
+  - wave pattern RAM: 0xFF30-3F (full)
+- master IO-ports:
+  - NR50 (partial)
+  - NR51 (partial)
+  - NR52 (partial)
+- 11kHz, but adjustable (see sound.c)
+
+Remark:
+The sound can be enabled by passing "-s" on the
+command-line.
+Don't get surprised, if the sound gets annoying
+for your ears ! It's *LOW* quality and this is
+an ALPHA-release ! 
+The sound slows down the emulation!
+
+Updated Makefile[.templ].
+- defined dependencies removed redundant rm's
+
+Updated files:
+- gameboy.* (io-regs 0x10-0x3F implementation)
+- unix.*    (linux sound support)
+
+New files:
+- README.FAQ (frequently asked questions)
+- sound.c, sound.h (sound implementation)
+
+------------------------------------------------------------
+Revision 0.14       1999/09/24 nakal
+
+Implemented Glide support (only 1 mode
+is available: 640x480x16, double-size).
+It is much faster than the X-support in
+double-size mode.
+
+Improved framebuffer support. This was
+an incredible speed-up ! Now it works
+even faster than the Glide version.
+
+Removed -DDOUBLESIZE size from sources;
+instead implemented command-line option
+'-d'. Now you needn't recompile the sources,
+if you want to switch between the big and
+small version.
+
+Makefile.templ rearranged:
+- removed release2, debug2
+- added glide
+
+main.c:
+- implemented command options support
+- updated help command
+
+gameboy.c:
+- scanlinexxx() functions improved
+
+unix.c:
+- lcdbuffer allocation improved
+- removed scanlines-support for the 
+  framebuffer and the glide version
+- optimized framebuffer-copy routines
+  (memcpy was too slow!)
+------------------------------------------------------------
+Revision 0.13  1999/09/23 nakal
+
+Fixed the problems with HDMA in vblank-
+mode. Now it provides realtime vblank
+support, which allows to run more games
+with decent graphics (CGB).
+
+Figured out the bug about tetris 2 player 
+mode (!). Now it should work fine.
+
+Gave all source files a little information
+header (for novices).
+
+CGB-games fixed:
+- Pitfall
+- Bugs Life
+- Rugrats
+- Antz
+- Spy Vs Spy
+
+STDGB-game fixed:
+- Tetris
+------------------------------------------------------------
+Revision 0.12  1999/09/22 nakal
+
+Added a configure script, that figures out
+three things about your system, I hope ...
+- endian structure (little/big)
+- joystick support (yes/no)
+- framebuffer support (yes/no)
+
+Added a joypad/-stick button configuration
+program. Now you needn't change the sources
+on your own.
+
+Updated the 'clean'-routine in Makefile.templ,
+so that it will recover all source files from
+modifications. Now it also will delete the
+binaries, so that you can easy make a tarball
+and pass the original files to your friends.
+
+Oops! found a small bug in joypad configuration
+routines: the buttons A and B were swapped !
+Corrected this crap.
+
+New files added to CVS:
+Makefile.templ
+configure
+conftest.c
+joybtn_conf.c
+joyconf.h
+joyconf.h.sidewinder
+
+Removed from CVS:
+Makefile
+------------------------------------------------------------
+Revision 0.11  1999/09/19 nakal
+
+Rewritten the entire color interpretation
+routines. Now it should work on more
+PCs (hope all of them).
+------------------------------------------------------------
+Revision 0.10b 1999/09/13 nakal
+
+Gameboy COLOR fixes:
+
+-implemented support for 8 bit X-displays
+ (keep in mind: Gameboy COLOR has 15(!) bits,
+  so try to use higher resolutions)
+-implemented endian-check
+-wrote a short explanation for the debugger
+
+File added to CVS:
+DEBUGGER
+------------------------------------------------------------
+Revision 0.10a 1999/09/05 nakal
+
+Gameboy COLOR fixes:
+- fixed Super Mario Deluxe
+  (now testing if bit 7 in 0:0x143 is set:
+   then enable cgb support)
+- fixed Pokemon Pinball (cartridge type: 0x1E)
+- HDMA needs to be fixed
+  you really need realtime behaviour
+............................................................
+Revision 0.10 1999/09/05 nakal
+
+Gameboy timings improved:
+- clock tables
+- interrupt timing (vblank,lcdc)
+- fixed Bomberman 3 (vblank timing)
+- fixed Castlevania 2 (port 0xFF40 bit 1 fixed)
+............................................................
+Revision 0.9  1999/09/01 nakal
+
+Basic gameboy color functions implemented!
+Now cingb detects some of the special
+color carts. Only the new cartridges will
+be played in color mode.
+
+To be done: 
+- MBC5 timer functions
+- window alignment
+
+I need help with:
+- SOUND!
+............................................................
+Revision 0.6-0.8  1999/07/02 16:40:16  nakal
+
+Optimizations.
+............................................................
+Revision 0.5d 1999/07/01 
+
+Sun Solaris appearantly has an older SVR4
+standard, which doesn't handle signals like
+linux. Now should be fixed, I hope.
+............................................................
+Revision 0.5c 1999/06/24 
+
+Implemented real time support for faster
+machines. Now, the emulator is synchronized
+with the screen refresh (appox. 50 Hz).
+Changes in: unix.c
+Due to these changes, cingb refuses to run on
+Sun Solaris. Why ? 
+There is a problem with sys/time.h...
+I don't know the particular issues.
+Next week, I'll check this out.
+............................................................
+Revision 0.5b  1999/06/21 
+
+It's a cool framebuffer version (ALPHA!, 
+don't forget). Changes mostly made to 
+unix.c. 
+
+IMPORTANT (only FB version): It is possible, 
+that you don't get the fb-version started. 
+Make sure, you have a 24 or 32 bits graphics 
+mode on your terminal (these are ones 
+providing the best compatibility). You can 
+try 15/16 modes, too, but ...
+There is also one more problem: you MUST
+have a joypad/-stick installed for playing
+with it.
+............................................................
+Revision 0.5  1999/06/03 15:23:47  nakal
+
+Beautified the sources, now it should
+be easier to work with them.
+Now cingb consists of modules.
+(It's pretty cool to watch the sources
+ compile, one after another !)
+Added/changed some comments.
+Changed the location of some functions.
+New headers: globaldefs.h, z80opc.h
+Removed: main.h (was empty now)
+Prototypes corrected.
+............................................................
+Revision 0.4  1999/04/25 19:10:12  nakal
+
+Fixed RLCA, RRCA, RLA, RRA opcodes.
+
+Result:
+Mystic Quest, Darkwing Duck fixed.
+............................................................
+Revision 0.3  1999/04/23 18:23:03  nakal
+
+Done a little fix to BIG ENDIAN machines. Now it 
+should work, I hope.
+
+Result:
+Sparc processor support.
+............................................................
+Revision 0.2  1999/04/13 18:55:32  nakal
+
+Fixed interrupt flag resetting (IM), which
+set IF to zero after first EI.
+Allowed delayed LCDSTAT interrupts.
+Implemented definitions for system w/o
+a joystick. See: README
+
+Result:
+Alfred Chicken, Killer Instinct fixed.
+............................................................
+Revision 0.1  1999/04/11 18:08:31  nakal
+
+Fixed the behaviour of the sound flags (0xFF26).
+cingb now keeps bits 0-3 set for approx. 1 sec.
+
+Result:
+Bart Simpson's Escape From Camp Deadly now works.
+............................................................
+Revision 0.0                       nakal
+
+Completely rewritten the old dos-cingb.
+
