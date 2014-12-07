@@ -11,7 +11,7 @@
 #ifndef GLOBALS_INCLUDED
 #define GLOBALS_INCLUDED
 
-#define VERSION_STRING "0.30ALPHA"
+#define VERSION_STRING "0.32"
 
 #define uchar unsigned char
 
