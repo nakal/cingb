@@ -1,0 +1,7 @@
+*.o
+Makefile
+Makefile.pre
+GNUmakefile
+cingb
+cingb_conf
+conftest
