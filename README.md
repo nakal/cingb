@@ -1,6 +1,9 @@
 
 # cingb
 
+| Repository moved to: `https://codeberg.org/nakal/cingb` |
+|---|
+
 cingb is an ATTEMPT to write a Gameboy emulator for all kinds of platforms.
 It plays Gameboy and Gameboy Color ROMs, includes a debugger for step-by-step
 analysis of Gameboy programs and might be also interesting for educational
